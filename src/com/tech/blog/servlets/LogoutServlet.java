@@ -25,7 +25,7 @@ import javax.servlet.http.HttpSession;
  */
 
 @MultipartConfig
-public class LoginServlet extends HttpServlet {
+public class LogoutServlet extends HttpServlet {
 
 	/**
 	 * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -46,32 +46,19 @@ public class LoginServlet extends HttpServlet {
             out.println("<title>Servlet LoginServlet</title>");
             out.println("</head>");
             out.println("<body>");
+            HttpSession session = request.getSession();
 			
-			// Fetch user email and password from request
-			String email = request.getParameter("email");
-			String password = request.getParameter("password");
-
-			UserDao dao = new UserDao(ConnectionProvider.getConnection());
-			User user = dao.getUserByEmailAndPassword(email, password);
-
-			if (user == null) {
-				// errorMsg
-				//out.println("Invalid Deatils, try again please");
-				Message msg = new Message("Invalid details! try again please", "error", "alert-danger");
-				HttpSession session = request.getSession();
-				
-				session.setAttribute("msg", msg);
-				
-				response.sendRedirect("login_page.jsp");
-			} else {
-				// Login success
-				HttpSession session = request.getSession();
-				session.setAttribute("currentUser", user);
-				response.sendRedirect("profile.jsp");
-			}
+            session.removeAttribute("currentUser");
+            Message message = new Message("Logout successfully", "success", "alert-success");
+            
+            session.setAttribute("msg", message);
+            
+            response.sendRedirect("login_page.jsp");
 			
-			out.println("</body>");
+			
+            out.println("</body>");
             out.println("</html>");
+			
 
 		}
 
