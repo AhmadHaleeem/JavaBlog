@@ -48,7 +48,7 @@ public class UserDao {
 			ResultSet set = pstmt.executeQuery();
 			if (set.next()) {
 				user = new User();
-				
+
 //	             data from db
 				String name = set.getString("name");
 //	             set to user object
@@ -71,4 +71,27 @@ public class UserDao {
 		return user;
 	}
 
+	public boolean updateUser(User user) {
+		boolean f = false;
+
+		try {
+			String query = "update user set name = ?, email = ?, password = ?, gender = ?, about = ?, profile = ? where id = ?";
+
+			PreparedStatement stmt = con.prepareStatement(query);
+			stmt.setString(1, user.getName());
+			stmt.setString(2, user.getEmail());
+			stmt.setString(3, user.getPassword());
+			stmt.setString(4, user.getGender());
+			stmt.setString(5, user.getAbout());
+			stmt.setString(6, user.getProfile());
+			stmt.setInt(7, user.getId());
+
+			stmt.executeUpdate();
+			f = true;
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return f;
+	}
 }
