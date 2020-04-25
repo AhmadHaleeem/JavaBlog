@@ -87,7 +87,40 @@
 		session.removeAttribute("msg");
 		}
 	%>
-
+	
+	<!-- Main body of the page  -->
+	
+	<main>
+		<div class="container">
+			<div class="row mt-4">
+				<div class="col-md-4">
+					<!-- CATEGORIES -->
+					<div class="list-group">
+					  <a href="#" class="list-group-item list-group-item-action active">
+					    All Categories
+					  </a>
+					  <% 
+					  	PostDao post = new PostDao(ConnectionProvider.getConnection());
+						for(Category category: post.getAllCategories()) {
+					  	
+					  %>
+					 	 <a href="#" class="list-group-item list-group-item-action"><%= category.getName() %></a>
+				 	 <%
+					  	}
+				 	 %>
+					</div>
+				</div>
+				
+				<div class="col-md-8">
+					<!-- POSTS  -->
+					
+				</div>
+			</div>
+			
+					
+		</div>
+	</main>
+	
 
 	<!-- PROFILE SECTION -->
 
