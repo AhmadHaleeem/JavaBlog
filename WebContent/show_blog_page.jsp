@@ -1,8 +1,10 @@
-<%@page import="com.tech.blog.entities.Category"%>
-<%@page import="com.tech.blog.dao.PostDao"%>
-<%@page import="com.tech.blog.entities.Message"%>
-<%@page import="com.tech.blog.helper.ConnectionProvider"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
 <%@page import="com.tech.blog.entities.User"%>
+<%@page import="com.tech.blog.entities.Post"%>
+<%@page import="com.tech.blog.helper.ConnectionProvider"%>
+<%@page import="com.tech.blog.dao.PostDao"%>
+
 <%@page errorPage="error_page.jsp"%>
 <%
 	User user = (User) session.getAttribute("currentUser");
@@ -11,11 +13,19 @@
 	}
 %>
 
+<%
+	int postId = Integer.parseInt(request.getParameter("post_id"));
+
+	PostDao dao = new PostDao(ConnectionProvider.getConnection());
+	Post post = dao.getPostById(postId);
+%>
+
+
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Login page</title>
+<title><%=post.getpTitle()%></title>
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
 	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
@@ -27,6 +37,36 @@
 .banner-background {
 	clip-path: polygon(0 0, 100% 0, 100% 30%, 100% 95%, 74% 94%, 36% 100%, 0 91%, 0%
 		30%);
+}
+
+.post-title {
+	font-weight: 100;
+	font-size: 30px;
+}
+
+.post-content {
+	font-weight: 100;
+	font-size: 25px;
+}
+
+.post-date {
+	font-style: italic;
+	font-weight: bold;
+}
+
+.post-user-info {
+	font-size: 20px;
+}
+
+.row-user {
+	border: 1px solid #e2e2e2;
+	padding-top: 15px;
+}
+
+body {
+	background: url(img/bg.jpeg);
+	background-size: cover;
+	background-attachment: fixed;
 }
 </style>
 </head>
@@ -60,7 +100,8 @@
 					</div></li>
 				<li class="nav-item"><a class="nav-link" href="#"><span
 						class="fa fa-address-book-o"></span> Contact</a></li>
-				<li class="nav-item"><a class="nav-link" href="#" data-toggle="modal" data-target="#do-post-modal"><span
+				<li class="nav-item"><a class="nav-link" href="#"
+					data-toggle="modal" data-target="#do-post-modal"><span
 						class="fa fa-asterisk"></span> New Post</a></li>
 
 			</ul>
@@ -76,63 +117,47 @@
 		</div>
 	</nav>
 
-	<%
-		Message message = (Message) session.getAttribute("msg");
-		if (message != null) {
-	%>
-	<div class="alert <%=message.getCssClass()%>" role="alert">
-		<%=message.getContent()%>
-	</div>
-	<%
-		session.removeAttribute("msg");
-		}
-	%>
-	
-	<!-- Main body of the page  -->
-	
-	<main>
-		<div class="container">
-			<div class="row mt-4">
-				<div class="col-md-4">
-					<!-- CATEGORIES -->
-					<div class="list-group">
-					  <a href="#" onclick="getPosts(0, this)" class="c-link list-group-item list-group-item-action active">
-					    All Categories
-					  </a>
-					  <% 
-					  	PostDao post = new PostDao(ConnectionProvider.getConnection());
-						for(Category category: post.getAllCategories()) {
-					  	
-					  %>
-					 	 <a href="#" onclick="getPosts(<%= category.getCid() %>, this)" class="c-link list-group-item list-group-item-action"><%= category.getName() %></a>
-				 	 <%
-					  	}
-				 	 %>
-					</div>
-				</div>
-				
-				<div class="col-md-8">
-					<!-- POSTS  -->
-					<div class="container text-center" id="loader">
-						<i class="fa fa-refresh fa-4x fa-spin"></i>
-						<h3 class="mt-2">Loading....</h3>
-					</div>
-					
-					<div class="container-fluid" id="post-container">
-						
-					</div>
-					
-				</div>
-			</div>
-			
-					
-		</div>
-	</main>
-	
+	  <!--main content of body-->
 
-	<!-- PROFILE SECTION -->
+        <div class="container">
+            <div class="row my-4">
+                <div class="col-md-8 offset-md-2">
+                    <div class="card">
 
-	<!-- Modal -->
+                        <div class="card-header primary-background text-white">
+                            <h4 class="post-title"><%= post.getpTitle()%></h4>
+                            
+                        </div>
+                        <div class="card-body">
+							<img class="card-img-top" style="width: 100%; height: 400px" src="blog_pics/<%=post.getpPic()%>" alt="<%=post.getpTitle()%>">
+							
+							<div class="row my-3 row-user">
+								<div class="col-md-8">
+									<p class=post-user-info"><a href=""><b>Ahmad haleem </b></a> has posted</p>
+								</div>
+								<div class="col-md-4">
+									<p class="post-date"><%= post.getpDate().toLocaleString() %></p>
+								</div>
+							</div>
+							
+							<p class="post-content"><%= post.getpContent()  %></p>
+							<br>
+							<br>
+							<div class="post-code">
+								<pre><%= post.getpCode() %></pre>
+							</div>
+                        </div>
+                        
+                        <div class="card-footer primary-background">
+							<a href="" class="btn btn-outline-light btn-sm "><i class="fa fa-thumbs-o-up"></i> <span>10</span></a>
+							<a href="" class="btn btn-outline-light btn-sm float-right"><i class="fa fa-commenting-o"></i> <span>20</span></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+	
+	
 	<div class="modal fade" id="profile-modal" tabindex="-1" role="dialog"
 		aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog" role="document">
@@ -240,66 +265,6 @@
 	</div>
 
 
-	<!-- Start Post Modal -->
-	<div class="modal fade" id="do-post-modal" tabindex="-1" role="dialog"
-		aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">Add new post</h5>
-					<button type="button" class="close" data-dismiss="modal"
-						aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<form id="add-post-form" action="AddPostServlet" method="post" enctype="multipart/form-data">
-						<div class="form-group">
-							<select class="form-control" name="cid">
-								<option selected disabled>---Select Category---</option>
-								<%
-									PostDao postDao = new PostDao(ConnectionProvider.getConnection());
-									for(Category cat: postDao.getAllCategories()) {
-								%>
-									<option value="<%= cat.getCid() %>"><%= cat.getName() %></option>
-								<%
-									}
-								%>
-							</select>
-						</div>
-					
-						<div class="form-group">
-							<input name="pTitle" type="text" placeholder="Enter Post Title" class="form-control">
-						</div>
-						
-						<div class="form-group">
-							<textarea name="pContent" class="form-control" rows="4" placeholder="Enter Post Content"></textarea>
-						</div>
-						
-						<div class="form-group">
-							<textarea name="pCode" class="form-control" placeholder="Enter Post Program(if any)"></textarea>
-						</div>
-						
-						<div class="form-group">
-							<label for="post-photo">Select your post photo</label>
-							<input name="pic" id="post-photo" type="file" class="form-control">
-						</div>
-						
-						<div class="container text-center">
-							<button type="submit" class="btn btn-primary">Post</button>
-						</div>
-						
-					</form>
-					
-				</div>
-				
-			</div>
-		</div>
-	</div>
-
-
-
-
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
@@ -309,90 +274,7 @@
 		src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
 		integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
 		crossorigin="anonymous"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
-
-	<script>
-		$(document).ready(function() {
-			let editStatus = false;
-
-			$("#edit-profile-btn").on("click", function() {
-				if (!editStatus) {
-					$("#profile-details").hide();
-
-					$("#profile-edit").show();
-					editStatus = true;
-					$(this).text("Back");
-				} else {
-					$("#profile-details").show();
-
-					$("#profile-edit").hide();
-					editStatus = false;
-					$(this).text("Edit");
-				}
-			});
-		});
-	</script>
-
-	<!-- Add Post JS -->
-	<script>
-		$(document).ready(function() {
-
-			$("#add-post-form").on("submit", function(e) {
-				e.preventDefault();
-				
-				console.log("CLICKED event");
-				let form = new FormData(this);
-				$.ajax({
-					url: "AddPostServlet",
-					type: "POST",
-					data: form,
-					success: function(data, textStatus, jqXHR) {
-						//success...
-						console.log(data);
-						if (data.trim() == "DONE") {
-							swal("Good job!", "Saved successfully!", "success");
-						} else {
-							swal("Error!!", "Something went wrong, please try again..", "error");
-						}
-					},
-					error: function(data, textStatus, jqXHR) {
-						// error...
-						
-					},
-					processData: false,
-					contentType: false
-				});
-			});
-		});
-	</script>
-
-	<!-- Loading post using Ajax -->
-	<script>
-		function getPosts(catId, temp) {
-			//console.log(temp);
-			$("#loader").show();
-			$("#post-container").hide();
-			$(".c-link").removeClass("active");
-			
-			$.ajax({
-				url: "load_posts.jsp",
-				data: { cid: catId },
-				method: "get",
-				success: function(data, textStatus, jqXHR) {
-					
-					$("#loader").hide();
-					$("#post-container").show();
-					$("#post-container").html(data);
-					$(temp).addClass("active");
-				}
-			});
-		}
-		$(document).ready(function (e) {
-			let allPostRef = $('.c-link')[0];
-			getPosts(0, allPostRef);
-		});
-	</script>
-
-
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 </body>
 </html>
