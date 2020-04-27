@@ -49,9 +49,9 @@ public class UserDao {
 			if (set.next()) {
 				user = new User();
 
-//	             data from db
+				// data from db
 				String name = set.getString("name");
-//	             set to user object
+				// set to user object
 				user.setName(name);
 
 				user.setId(set.getInt("id"));
@@ -93,5 +93,35 @@ public class UserDao {
 			ex.printStackTrace();
 		}
 		return f;
+	}
+
+	public User getUserByPostId(int userId) {
+		User user = null;
+		
+		try {
+			String query = "select * from user where id = ?";
+			PreparedStatement stmt = this.con.prepareStatement(query);
+			
+			stmt.setInt(1, userId);
+			
+			ResultSet set = stmt.executeQuery();
+			if (set.next()) {
+				user = new User();
+				// set to user object
+				user.setName(set.getString("name"));
+
+				user.setId(set.getInt("id"));
+				user.setEmail(set.getString("email"));
+				user.setPassword(set.getString("password"));
+				user.setGender(set.getString("gender"));
+				user.setAbout(set.getString("about"));
+				user.setDateTime(set.getTimestamp("rdate"));
+				user.setProfile(set.getString("profile"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return user;
 	}
 }

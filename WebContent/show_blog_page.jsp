@@ -1,3 +1,5 @@
+<%@page import="java.text.DateFormat"%>
+<%@page import="com.tech.blog.dao.UserDao"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@page import="com.tech.blog.entities.User"%>
@@ -34,6 +36,11 @@
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link href="css/mystyle.css" rel="stylesheet" type="text/css">
 <style>
+body {
+	background: url(img/bg.jpeg);
+	background-size: cover;
+	background-attachment: fixed;
+}
 .banner-background {
 	clip-path: polygon(0 0, 100% 0, 100% 30%, 100% 95%, 74% 94%, 36% 100%, 0 91%, 0%
 		30%);
@@ -63,11 +70,7 @@
 	padding-top: 15px;
 }
 
-body {
-	background: url(img/bg.jpeg);
-	background-size: cover;
-	background-attachment: fixed;
-}
+
 </style>
 </head>
 <body>
@@ -84,7 +87,7 @@ body {
 
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
 			<ul class="navbar-nav mr-auto">
-				<li class="nav-item active"><a class="nav-link" href="#"><span
+				<li class="nav-item active"><a class="nav-link" href="profile.jsp"><span
 						class="fa fa-bell-o"></span> Learn Code with Ahmad <span
 						class="sr-only">(current)</span> </a></li>
 				<li class="nav-item dropdown"><a
@@ -133,10 +136,14 @@ body {
 							
 							<div class="row my-3 row-user">
 								<div class="col-md-8">
-									<p class=post-user-info"><a href=""><b>Ahmad haleem </b></a> has posted</p>
+									<%
+										UserDao userDao = new UserDao(ConnectionProvider.getConnection());
+										User usr = userDao.getUserByPostId(post.getUserId());
+									%>
+									<p class=post-user-info"><a href=""><b><%= usr.getName() %> </b></a> has posted</p>
 								</div>
 								<div class="col-md-4">
-									<p class="post-date"><%= post.getpDate().toLocaleString() %></p>
+									<p class="post-date"><%= DateFormat.getDateTimeInstance().format(post.getpDate()) %></p>
 								</div>
 							</div>
 							

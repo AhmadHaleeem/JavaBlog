@@ -24,6 +24,11 @@
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link href="css/mystyle.css" rel="stylesheet" type="text/css">
 <style>
+body {
+	background: url(img/bg.jpeg);
+	background-size: cover;
+	background-attachment: fixed;
+}
 .banner-background {
 	clip-path: polygon(0 0, 100% 0, 100% 30%, 100% 95%, 74% 94%, 36% 100%, 0 91%, 0%
 		30%);
@@ -44,7 +49,7 @@
 
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
 			<ul class="navbar-nav mr-auto">
-				<li class="nav-item active"><a class="nav-link" href="#"><span
+				<li class="nav-item active"><a class="nav-link" href="profile.jsp"><span
 						class="fa fa-bell-o"></span> Learn Code with Ahmad <span
 						class="sr-only">(current)</span> </a></li>
 				<li class="nav-item dropdown"><a
