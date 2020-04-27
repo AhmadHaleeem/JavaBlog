@@ -3,11 +3,12 @@ package com.tech.blog.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.tech.blog.entities.Category;
 import com.tech.blog.entities.Post;
-import com.tech.blog.entities.User;
 
 public class PostDao {
 
@@ -60,5 +61,65 @@ public class PostDao {
 		}
 
 		return f;
+	}
+
+	public List<Post> getAllPosts() {
+		List<Post> postsList = new ArrayList<>();
+
+		try {
+			PreparedStatement stmt = this.con.prepareStatement("select * from posts order by pid desc");
+			ResultSet executeQuery = stmt.executeQuery();
+
+			while (executeQuery.next()) {
+				int pId = executeQuery.getInt("pid");
+				String pTitle = executeQuery.getString("pTitle");
+				String pContent = executeQuery.getString("pContent");
+				String pCode = executeQuery.getString("pCode");
+				String pPic = executeQuery.getString("pPic");
+				Timestamp date = executeQuery.getTimestamp("pDate");
+				int catId = executeQuery.getInt("catId");
+				int userId = executeQuery.getInt("userId");
+
+				Post post = new Post(pId, pTitle, pContent, pCode, pPic, date, catId, userId);
+
+				postsList.add(post);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return postsList;
+	}
+
+	public List<Post> getPostByCatId(int catId) {
+		List<Post> postsListByCatId = new ArrayList<>();
+
+		try {
+			PreparedStatement stmt = this.con.prepareStatement("select * from posts where catId = ?");
+			stmt.setInt(1, catId);
+			ResultSet executeQuery = stmt.executeQuery();
+
+			while (executeQuery.next()) {
+				int pId = executeQuery.getInt("pid");
+				String pTitle = executeQuery.getString("pTitle");
+				String pContent = executeQuery.getString("pContent");
+				String pCode = executeQuery.getString("pCode");
+				String pPic = executeQuery.getString("pPic");
+				Timestamp date = executeQuery.getTimestamp("pDate");
+				int cId = executeQuery.getInt("catId");
+				int userId = executeQuery.getInt("userId");
+
+				Post post = new Post(pId, pTitle, pContent, pCode, pPic, date, cId, userId);
+
+				postsListByCatId.add(post);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		return postsListByCatId;
 	}
 }

@@ -96,7 +96,7 @@
 				<div class="col-md-4">
 					<!-- CATEGORIES -->
 					<div class="list-group">
-					  <a href="#" class="list-group-item list-group-item-action active">
+					  <a href="#" onclick="getPosts(0)" class="c-link list-group-item list-group-item-action active">
 					    All Categories
 					  </a>
 					  <% 
@@ -104,7 +104,7 @@
 						for(Category category: post.getAllCategories()) {
 					  	
 					  %>
-					 	 <a href="#" class="list-group-item list-group-item-action"><%= category.getName() %></a>
+					 	 <a href="#" onclick="getPosts(<%= category.getCid() %>)" class="c-link list-group-item list-group-item-action"><%= category.getName() %></a>
 				 	 <%
 					  	}
 				 	 %>
@@ -113,6 +113,14 @@
 				
 				<div class="col-md-8">
 					<!-- POSTS  -->
+					<div class="container text-center" id="loader">
+						<i class="fa fa-refresh fa-4x fa-spin"></i>
+						<h3 class="mt-2">Loading....</h3>
+					</div>
+					
+					<div class="container-fluid" id="post-container">
+						
+					</div>
 					
 				</div>
 			</div>
@@ -358,7 +366,29 @@
 		});
 	</script>
 
-
+	<!-- Loading post using Ajax -->
+	<script>
+		function getPosts(catId) {
+			$("#loader").show();
+			$("#post-container").hide();
+			
+			$.ajax({
+				url: "load_posts.jsp",
+				data: { cid: catId },
+				method: "get",
+				success: function(data, textStatus, jqXHR) {
+					console.log(catId);
+					
+					$("#loader").hide();
+					$("#post-container").show();
+					$("#post-container").html(data);
+				}
+			});
+		}
+		$(document).ready(function (e) {
+			getPosts(0);
+		});
+	</script>
 
 
 </body>
