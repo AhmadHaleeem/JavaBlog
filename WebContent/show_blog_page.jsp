@@ -1,3 +1,4 @@
+<%@page import="com.tech.blog.dao.LikeDao"%>
 <%@page import="java.text.DateFormat"%>
 <%@page import="com.tech.blog.dao.UserDao"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
@@ -41,6 +42,7 @@ body {
 	background-size: cover;
 	background-attachment: fixed;
 }
+
 .banner-background {
 	clip-path: polygon(0 0, 100% 0, 100% 30%, 100% 95%, 74% 94%, 36% 100%, 0 91%, 0%
 		30%);
@@ -69,8 +71,6 @@ body {
 	border: 1px solid #e2e2e2;
 	padding-top: 15px;
 }
-
-
 </style>
 </head>
 <body>
@@ -87,9 +87,9 @@ body {
 
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
 			<ul class="navbar-nav mr-auto">
-				<li class="nav-item active"><a class="nav-link" href="profile.jsp"><span
-						class="fa fa-bell-o"></span> Learn Code with Ahmad <span
-						class="sr-only">(current)</span> </a></li>
+				<li class="nav-item active"><a class="nav-link"
+					href="profile.jsp"><span class="fa fa-bell-o"></span> Learn
+						Code with Ahmad <span class="sr-only">(current)</span> </a></li>
 				<li class="nav-item dropdown"><a
 					class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
 					role="button" data-toggle="dropdown" aria-haspopup="true"
@@ -120,51 +120,59 @@ body {
 		</div>
 	</nav>
 
-	  <!--main content of body-->
+	<!--main content of body-->
 
-        <div class="container">
-            <div class="row my-4">
-                <div class="col-md-8 offset-md-2">
-                    <div class="card">
+	<div class="container">
+		<div class="row my-4">
+			<div class="col-md-8 offset-md-2">
+				<div class="card">
 
-                        <div class="card-header primary-background text-white">
-                            <h4 class="post-title"><%= post.getpTitle()%></h4>
-                            
-                        </div>
-                        <div class="card-body">
-							<img class="card-img-top" style="width: 100%; height: 400px" src="blog_pics/<%=post.getpPic()%>" alt="<%=post.getpTitle()%>">
-							
-							<div class="row my-3 row-user">
-								<div class="col-md-8">
-									<%
-										UserDao userDao = new UserDao(ConnectionProvider.getConnection());
-										User usr = userDao.getUserByPostId(post.getUserId());
-									%>
-									<p class=post-user-info"><a href=""><b><%= usr.getName() %> </b></a> has posted</p>
-								</div>
-								<div class="col-md-4">
-									<p class="post-date"><%= DateFormat.getDateTimeInstance().format(post.getpDate()) %></p>
-								</div>
+					<div class="card-header primary-background text-white">
+						<h4 class="post-title"><%=post.getpTitle()%></h4>
+
+					</div>
+					<div class="card-body">
+						<img class="card-img-top" style="width: 100%; height: 400px"
+							src="blog_pics/<%=post.getpPic()%>" alt="<%=post.getpTitle()%>">
+
+						<div class="row my-3 row-user">
+							<div class="col-md-8">
+								<%
+									UserDao userDao = new UserDao(ConnectionProvider.getConnection());
+									User usr = userDao.getUserByPostId(post.getUserId());
+								%>
+								<p class=post-user-info">
+									<a href=""><b><%=usr.getName()%> </b></a> has posted
+								</p>
 							</div>
-							
-							<p class="post-content"><%= post.getpContent()  %></p>
-							<br>
-							<br>
-							<div class="post-code">
-								<pre><%= post.getpCode() %></pre>
+							<div class="col-md-4">
+								<p class="post-date"><%=DateFormat.getDateTimeInstance().format(post.getpDate())%></p>
 							</div>
-                        </div>
-                        
-                        <div class="card-footer primary-background">
-							<a href="" class="btn btn-outline-light btn-sm "><i class="fa fa-thumbs-o-up"></i> <span>10</span></a>
-							<a href="" class="btn btn-outline-light btn-sm float-right"><i class="fa fa-commenting-o"></i> <span>20</span></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-	
-	
+						</div>
+
+						<p class="post-content"><%=post.getpContent()%></p>
+						<br> <br>
+						<div class="post-code">
+							<pre><%=post.getpCode()%></pre>
+						</div>
+					</div>
+					<div class="card-footer primary-background">
+						<%
+							LikeDao likeDao = new LikeDao(ConnectionProvider.getConnection());
+						%>
+					
+						<a href="#" onclick="doLike(<%= post.getPid() %>, <%= usr.getId() %>)" class="btn btn-outline-light btn-sm ">
+							<i class="fa fa-thumbs-o-up"></i> 
+							<span class="like-counter"><%= likeDao.countLikeOnPost(post.getPid()) %></span>
+						</a> 
+						<a href="" class="btn btn-outline-light btn-sm float-right"><i class="fa fa-commenting-o"></i> <span>20</span></a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
 	<div class="modal fade" id="profile-modal" tabindex="-1" role="dialog"
 		aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog" role="document">
@@ -283,5 +291,7 @@ body {
 		crossorigin="anonymous"></script>
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+
+	<script src="js/myjs.js"></script>
 </body>
 </html>

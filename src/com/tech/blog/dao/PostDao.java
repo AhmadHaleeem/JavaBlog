@@ -134,6 +134,7 @@ public class PostDao {
 			ResultSet executeQuery = stmt.executeQuery();
 			
 			if (executeQuery.next()) {
+				int pid = executeQuery.getInt("pid");
 				String title = executeQuery.getString("pTitle");
 				String content = executeQuery.getString("pContent");
 				String code = executeQuery.getString("pCode");
@@ -142,7 +143,7 @@ public class PostDao {
 				int cat_id = executeQuery.getInt("catId");
 				int user_id = executeQuery.getInt("userId");
 				
-				post = new Post(title, content, code, pic, date, cat_id, user_id);
+				post = new Post(pid, title, content, code, pic, date, cat_id, user_id);
 			}
 			
 			
